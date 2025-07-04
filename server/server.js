@@ -3,29 +3,38 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-
-// TODO
-// import authRoutes from './routes/auth.js';
+import config from './config/config.js';
+import routes from "./routes/routes.js";
 
 dotenv.config();
 
-const port = process.env.PORT || 5000;
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-
-// TODO routes
-// app.use('/api/auth', authRoutes);
+app.use('/todo', routes);
 
 app.get('/', (req, res) => {
     res.send('Server is running');
 });
 
-// Connect to MongoDB
-// TODO add MONGO_URI to .env
-mongoose.connect(process.env.MONGO_URI, {
-}).then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('Mongo error:', err));
+// TODO add MONGO_URI to .env and check
 
+const connectDB = async () => {
+    try {
+        await mongoose.connect(config.mongodb.uri, config.mongodb.db);
+        console.log('MongoDB connected successfully!');
+    } catch (error) {
+        console.log('MongoDB connection error: ', error);
+    }
+}
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+const startServer = async () => {
+    await connectDB();
+    app.listen(config.port, '0.0.0.0', () => {
+        console.log(`Server started on port ${config.port}. Press Ctrl-C to finish`);
+    })
+}
+
+startServer();
+

@@ -1,4 +1,3 @@
-//TODO just test of connection with Github
 
 import mongoose from 'mongoose';
 
