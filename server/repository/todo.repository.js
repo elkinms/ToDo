@@ -6,15 +6,16 @@ class TodoRepository {
         return await task.save();
     }
 
-    async findAllTasks() {
+    // async findAllTasks() {
+    //
+    // }
 
-    }
-
-    async updateTask(id, task) {
-
+    async updateTask(id, updateData) {
+        return Todo.findByIdAndUpdate(id, updateData, {new: true});
     }
 
     async deleteTask(id) {
+        return Todo.findByIdAndDelete(id);
 
     }
 
