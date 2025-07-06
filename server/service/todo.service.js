@@ -2,11 +2,11 @@ import todoRepository from '../repository/todo.repository.js'
 
 class TodoService {
     async createTask(title) {
-        return await todoRepository.createTask(title);
+        return await todoRepository.createTask({title});
     }
 
     async getAllTasks() {
-
+        return await todoRepository.findAllTasks();
     }
 
     async updateTask(id, title) {

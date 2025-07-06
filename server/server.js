@@ -18,8 +18,6 @@ app.get('/', (req, res) => {
     res.send('Server is running');
 });
 
-// TODO add MONGO_URI to .env and check
-
 const connectDB = async () => {
     try {
         await mongoose.connect(config.mongodb.uri, config.mongodb.db);
