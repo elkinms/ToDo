@@ -1,8 +1,8 @@
 import todoRepository from '../repository/todo.repository.js'
 
 class TodoService {
-    async createTask(title) {
-        return await todoRepository.createTask({title});
+    async createTask(taskData) {
+        return await todoRepository.createTask(taskData);
     }
 
     async getAllTasks() {

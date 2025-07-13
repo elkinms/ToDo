@@ -1,8 +1,8 @@
 import Todo from '../models/toDo.js';
 
 class TodoRepository {
-    async createTask(title) {
-        const task = new Todo(title);
+    async createTask(taskData) {
+        const task = new Todo(taskData);
         return await task.save();
     }
 
