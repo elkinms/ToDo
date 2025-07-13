@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 
-const Task = ({content, index, remove, update}) => {
+const Task = ({id, content, remove, update}) => {
     const [isEdit, setIsEdit] = useState(false);
     const textId = useRef();
 
@@ -9,12 +9,12 @@ const Task = ({content, index, remove, update}) => {
     }
 
     const handleClickSave = () => {
-        update(index, textId.current.value);
+        update(id, textId.current.value);
         setIsEdit(false);
     }
 
     const handleClickRemove = () => {
-        remove(index);
+        remove(id);
     }
 
     if(isEdit) {

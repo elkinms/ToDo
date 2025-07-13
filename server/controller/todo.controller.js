@@ -31,6 +31,7 @@ class TodoController {
     async deleteTask(req, res, next) {
         try {
             const task = await todoService.deleteTask(req.params.id);
+
             res.json(task);
         } catch (err) {
             next(err);
