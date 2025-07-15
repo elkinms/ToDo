@@ -1,22 +1,26 @@
+body {
+  background: #f0f0f0;
+  color: black;
+  font-family: sans-serif;
+}
 
 .field {
   display: flex;
   padding: 10px;
-  width: 29%;
-  margin-left: 35.5%;
-  color: #fff;
-  font-size: 1.3em;
+  width: 100%;
   flex-direction: column;
   align-items: center;
+  font-size: 1.3em;
 }
 
 .box {
-  border: 2px solid #aaa719;
-  background-color: #d4d37f;
+  border: 1px solid #999; /* lighter gray border */
+  background-color: white;
   margin-bottom: 20px;
   padding: 10px;
-  width: 80%;
+  width: 30%;
   text-align: center;
+  border-radius: 8px;
 }
 
 .box:last-child {
@@ -28,15 +32,23 @@ button.btn {
   padding: 10px;
   margin-top: 10px;
   cursor: pointer;
-  font-size: 0.65em;
-  color: #fff;
-  outline: none;
+  font-size: 0.8em;
+  color: black;
+  background-color: white;
+  border: 1px solid #999; /* lighter gray border */
+  border-radius: 6px;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-textarea{
+button.btn:hover {
+  background-color: #ddd;
+  border-color: #777; /* slightly darker on hover */
+}
+
+textarea {
   resize: none;
   background-color: #fafafa;
-  border: 1.5px solid silver;
+  border: 1px solid #999; /* lighter gray border */
   border-radius: 5px;
   padding: 10px;
   font-size: 0.7em;
@@ -44,47 +56,19 @@ textarea{
   outline: none;
 }
 
-textarea:focus{
-  border: 1.5px solid #6d79cd;
+textarea:focus {
+  border: 1px solid #6d79cd;
 }
 
-.btn.new{
-  background-color: #dd567e;
-  border: 2px solid #c93964;
-  margin-bottom: 10px;
+.btn.new, .btn.success, .btn.light, .btn.red {
+  background-color: white;
+  border: 1px solid #999;
 }
 
-.btn.new:hover{
-  background-color: #c93964;
-  border: 2px solid #ac254d;
-}
-
-.btn.success{
-  background-color: #4fc966;
-  border: 2px solid #2aa24f;
-}
-
-.btn.success:hover{
-  background-color: #2aa24f;
-  border: 2px solid #1e853e;
-}
-
-.btn.light {
-  background-color: #4eafc9;
-  border: 2px solid #2a89a2;
-}
-
-.btn.red {
-  background-color: #dda66d;
-  border: 2px solid #b6821a;
-}
-
-.btn.light:hover {
-  background-color: #2a89a2;
-  border-color: #1d6f85;
-}
-
+.btn.new:hover,
+.btn.success:hover,
+.btn.light:hover,
 .btn.red:hover {
-  background-color: #b6821a;
-  border-color: #946912;
+  background-color: #ddd;
+  border-color: #777;
 }

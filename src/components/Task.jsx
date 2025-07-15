@@ -29,7 +29,7 @@ const Task = ({id, content, remove, update}) => {
             <div className={'box'}>
                 <div>{content}</div>
                 <button onClick={handleClickEdit} className={'btn light'}>Edit</button>
-                <button onClick={handleClickRemove} className={'btn red'}>Remove</button>
+                <button onClick={handleClickRemove} className={'btn red'}>Delete</button>
             </div>
         )
     }

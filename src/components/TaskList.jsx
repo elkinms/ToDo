@@ -58,25 +58,26 @@ const TaskList = () => {
 
     return (
         <div className={'field'}>
-            <button onClick={() => addTask('new task')} className={'btn new'}>
-                Add task
-            </button>
+            <div className={'box'}>
+                <button onClick={() => addTask('new task')} className={'btn new'}>
+                    Add task
+                </button>
+            </div>
             {tasks.map(task => {
                 console.log("MAP TASK:", task);
                 return (
-                    <Task
-                        key={task.id}
-                        id={task.id}
+                        <Task
+                            key={task.id}
+                            id={task.id}
+                            remove={deleteTask}
+                            update={updateTask}
+                            content={task.title}
+                        />
+                    )
 
-                        remove={deleteTask}
-                        update={updateTask}
-                        content={task.title}
-                    />
-                )
+                })}
+            </div>
+            );
+            };
 
-            })}
-        </div>
-    );
-};
-
-export default TaskList;
+            export default TaskList;
