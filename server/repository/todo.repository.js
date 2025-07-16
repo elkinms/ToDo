@@ -10,6 +10,10 @@ class TodoRepository {
         return await Todo.find();
     }
 
+    async findAllTasksUser(userId) {
+        return await Todo.find({owner: userId });
+    }
+
     async updateTask(id, updateData) {
         return Todo.findByIdAndUpdate(id, updateData, {new: true});
     }

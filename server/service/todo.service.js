@@ -9,6 +9,10 @@ class TodoService {
         return await todoRepository.findAllTasks();
     }
 
+    async getAllTasksByUser(userId) {
+        return await todoRepository.findAllTasksUser(userId);
+    }
+
     async updateTask(id, title) {
         return await todoRepository.updateTask(id, title);
     }

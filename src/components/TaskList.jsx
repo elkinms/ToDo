@@ -1,17 +1,27 @@
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Task from "../components/Task.jsx";
 
-const TaskList = () => {
+const TaskList = ({ onLogout }) => {
     const [tasks, setTasks] = useState([]);
+    const token = localStorage.getItem("token");
 
-    // uploading tasks from  DB
     useEffect(() => {
         loadTasks();
     }, []);
 
     const loadTasks = async () => {
         try {
-            const response = await fetch("http://localhost:8080/todo");
+            const response = await fetch("http://localhost:8080/todo", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.status === 401) {
+                onLogout();
+                return;
+            }
+
             const data = await response.json();
             setTasks(data);
         } catch (err) {
@@ -21,12 +31,21 @@ const TaskList = () => {
 
     const addTask = async (newContent) => {
         try {
-            await fetch("http://localhost:8080/todo", {
+            const res = await fetch("http://localhost:8080/todo", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({title: newContent})
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ title: newContent }),
             });
-            await loadTasks(); // загрузим список заново
+
+            if (res.status === 401) {
+                onLogout();
+                return;
+            }
+
+            await loadTasks();
         } catch (err) {
             console.error("Error adding task:", err);
         }
@@ -34,9 +53,18 @@ const TaskList = () => {
 
     const deleteTask = async (id) => {
         try {
-            await fetch(`http://localhost:8080/todo/${id}`, {
-                method: "DELETE"
+            const res = await fetch(`http://localhost:8080/todo/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
+
+            if (res.status === 401) {
+                onLogout();
+                return;
+            }
+
             await loadTasks();
         } catch (err) {
             console.error("Error deleting task:", err);
@@ -45,39 +73,55 @@ const TaskList = () => {
 
     const updateTask = async (id, text) => {
         try {
-            await fetch(`http://localhost:8080/todo/${id}`, {
+            const res = await fetch(`http://localhost:8080/todo/${id}`, {
                 method: "PATCH",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({title: text})
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ title: text }),
             });
+
+            if (res.status === 401) {
+                onLogout();
+                return;
+            }
+
             await loadTasks();
         } catch (err) {
             console.error("Error updating task:", err);
         }
     };
 
+    const handleLogoutClick = () => {
+        localStorage.removeItem("token");
+        onLogout();
+    };
+
     return (
-        <div className={'field'}>
-            <div className={'box'}>
-                <button onClick={() => addTask('new task')} className={'btn new'}>
+        <div className={"field"}>
+            <div className={"box"}>
+                <button onClick={() => addTask("new task")} className={"btn new"}>
                     Add task
                 </button>
+                <button onClick={handleLogoutClick} className={"btn"} style={{ marginLeft: '10px' }}>
+                    Logout
+                </button>
             </div>
-            {tasks.map(task => {
+            {tasks.map((task) => {
                 console.log("MAP TASK:", task);
                 return (
-                        <Task
-                            key={task.id}
-                            id={task.id}
-                            remove={deleteTask}
-                            update={updateTask}
-                            content={task.title}
-                        />
-                    )
+                    <Task
+                        key={task.id || task._id}
+                        id={task.id || task._id}
+                        remove={deleteTask}
+                        update={updateTask}
+                        content={task.title}
+                    />
+                );
+            })}
+        </div>
+    );
+};
 
-                })}
-            </div>
-            );
-            };
-
-            export default TaskList;
+export default TaskList;
