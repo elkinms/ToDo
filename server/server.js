@@ -4,7 +4,8 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import config from './config/config.js';
-import routes from "./routes/routes.js";
+import tasks from "./routes/task.routes.js";
+import auth from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -12,7 +13,8 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/', routes);
+app.use('/', tasks);
+app.use('/auth', auth);
 
 app.get('/', (req, res) => {
     res.send('Server is running');
