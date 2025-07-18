@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import Task from "../components/Task.jsx";
+import Task from "./Task.jsx";
+import Header from "./Header.jsx";
 
 const TaskList = ({ onLogout }) => {
     const [tasks, setTasks] = useState([]);
+    const [selectedIds, setSelectedIds] = useState([]);
+    const [newTaskTitle, setNewTaskTitle] = useState("");
     const token = localStorage.getItem("token");
 
     useEffect(() => {
@@ -12,9 +15,7 @@ const TaskList = ({ onLogout }) => {
     const loadTasks = async () => {
         try {
             const response = await fetch("http://localhost:8080/todo", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.status === 401) {
@@ -29,7 +30,9 @@ const TaskList = ({ onLogout }) => {
         }
     };
 
-    const addTask = async (newContent) => {
+    const addTask = async () => {
+        if (!newTaskTitle.trim()) return;
+
         try {
             const res = await fetch("http://localhost:8080/todo", {
                 method: "POST",
@@ -37,7 +40,11 @@ const TaskList = ({ onLogout }) => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ title: newContent }),
+                body: JSON.stringify({
+                    title: newTaskTitle,
+                    status: "Not started",
+                    priority: "Medium",
+                }),
             });
 
             if (res.status === 401) {
@@ -45,33 +52,35 @@ const TaskList = ({ onLogout }) => {
                 return;
             }
 
+            setNewTaskTitle("");
             await loadTasks();
         } catch (err) {
             console.error("Error adding task:", err);
         }
     };
 
-    const deleteTask = async (id) => {
-        try {
-            const res = await fetch(`http://localhost:8080/todo/${id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+    const deleteSelectedTasks = async () => {
+        for (const id of selectedIds) {
+            try {
+                const res = await fetch(`http://localhost:8080/todo/${id}`, {
+                    method: "DELETE",
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-            if (res.status === 401) {
-                onLogout();
-                return;
+                if (res.status === 401) {
+                    onLogout();
+                    return;
+                }
+            } catch (err) {
+                console.error("Error deleting task:", err);
             }
-
-            await loadTasks();
-        } catch (err) {
-            console.error("Error deleting task:", err);
         }
+
+        setSelectedIds([]);
+        await loadTasks();
     };
 
-    const updateTask = async (id, text) => {
+    const updateTask = async (id, updatedData) => {
         try {
             const res = await fetch(`http://localhost:8080/todo/${id}`, {
                 method: "PATCH",
@@ -79,7 +88,7 @@ const TaskList = ({ onLogout }) => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ title: text }),
+                body: JSON.stringify(updatedData),
             });
 
             if (res.status === 401) {
@@ -93,33 +102,91 @@ const TaskList = ({ onLogout }) => {
         }
     };
 
-    const handleLogoutClick = () => {
-        localStorage.removeItem("token");
-        onLogout();
+    const toggleSelect = (id) => {
+        setSelectedIds((prev) =>
+            prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+        );
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedIds.length === tasks.length) {
+            setSelectedIds([]);
+        } else {
+            setSelectedIds(tasks.map((t) => t.id || t._id));
+        }
     };
 
     return (
-        <div className={"field"}>
-            <div className={"box"}>
-                <button onClick={() => addTask("new task")} className={"btn new"}>
-                    Add task
-                </button>
-                <button onClick={handleLogoutClick} className={"btn"} style={{ marginLeft: '10px' }}>
-                    Logout
-                </button>
-            </div>
-            {tasks.map((task) => {
-                console.log("MAP TASK:", task);
-                return (
+        <div className="px-2 w-full">
+            <Header
+                title="List it. Do it."
+                options={[{ label: "Log out", value: "logout" }]}
+                onOptionClick={(value) => {
+                    if (value === "logout") {
+                        localStorage.removeItem("token");
+                        onLogout();
+                    }
+                }}
+            />
+
+            <table className="table-auto w-full border border-gray-300 border-collapse">
+                <thead>
+                <tr className="bg-gray-100">
+                    <th className="border border-gray-300 px-4 py-2 w-12 text-center">
+                        <input
+                            type="checkbox"
+                            checked={selectedIds.length === tasks.length && tasks.length > 0}
+                            onChange={toggleSelectAll}
+                        />
+                    </th>
+                    <th className="border border-gray-300 px-4 py-2">Task</th>
+                    <th className="border border-gray-300 px-4 py-2">Status</th>
+                    <th className="border border-gray-300 px-4 py-2">Priority</th>
+                </tr>
+                </thead>
+                <tbody>
+                {tasks.map((task) => (
                     <Task
                         key={task.id || task._id}
                         id={task.id || task._id}
-                        remove={deleteTask}
-                        update={updateTask}
                         content={task.title}
+                        status={task.status}
+                        priority={task.priority}
+                        update={updateTask}
+                        selected={selectedIds.includes(task.id || task._id)}
+                        onSelect={toggleSelect}
                     />
-                );
-            })}
+                ))}
+                <tr>
+                    <td className="border border-gray-300 px-4 py-2 text-center"></td>
+                    <td className="border border-gray-300 px-4 py-2">
+                        <input
+                            type="text"
+                            value={newTaskTitle}
+                            onChange={(e) => setNewTaskTitle(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") addTask();
+                            }}
+                            placeholder="+ Add task"
+                            className="w-full px-2 py-1 border border-gray-300 rounded"
+                        />
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2"></td>
+                    <td className="border border-gray-300 px-4 py-2"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            {selectedIds.length > 0 && (
+                <div className="flex justify-end mt-4">
+                    <button
+                        onClick={deleteSelectedTasks}
+                        className="px-4 py-2 bg-white text-gray-700 rounded shadow hover:bg-gray-100"
+                    >
+                        Delete selected
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
