@@ -117,9 +117,8 @@ const TaskList = ({ onLogout }) => {
     };
 
     return (
-        <div className="px-2 w-full">
+        <div className="pl-2 w-full">
             <Header
-                title="List it. Do it."
                 options={[{ label: "Log out", value: "logout" }]}
                 onOptionClick={(value) => {
                     if (value === "logout") {
@@ -129,13 +128,15 @@ const TaskList = ({ onLogout }) => {
                 }}
             />
 
-            <table className="table-auto w-full border border-gray-300 border-collapse">
+            <table className="table-auto w-full border-separate border-spacing-0">
                 <thead>
-                <tr className="bg-gray-100">
-                    <th className="border border-gray-300 px-4 py-2 w-12 text-center">
+                <tr>
+                    <th className="border border-gray-300 px-4 py-2 w-12 text-center rounded-tl-md">
                         <input
                             type="checkbox"
-                            checked={selectedIds.length === tasks.length && tasks.length > 0}
+                            checked={
+                                selectedIds.length === tasks.length && tasks.length > 0
+                            }
                             onChange={toggleSelectAll}
                         />
                     </th>
@@ -145,21 +146,23 @@ const TaskList = ({ onLogout }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {tasks.map((task) => (
+                {tasks.map((task, index) => (
                     <Task
-                        key={task.id || task._id}
-                        id={task.id || task._id}
+                        key={task.id}
+                        id={task.id}
                         content={task.title}
                         status={task.status}
                         priority={task.priority}
                         update={updateTask}
-                        selected={selectedIds.includes(task.id || task._id)}
+                        selected={selectedIds.includes(task.id)}
                         onSelect={toggleSelect}
+                        isFirst={index === 0}
+                        isLast={index === tasks.length - 1}
                     />
                 ))}
                 <tr>
-                    <td className="border border-gray-300 px-4 py-2 text-center"></td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-center rounded-bl-md"></td>
+                    <td className="border border-gray-300 px-4 py-2" colSpan={3}>
                         <input
                             type="text"
                             value={newTaskTitle}
@@ -171,8 +174,6 @@ const TaskList = ({ onLogout }) => {
                             className="w-full px-2 py-1 border border-gray-300 rounded"
                         />
                     </td>
-                    <td className="border border-gray-300 px-4 py-2"></td>
-                    <td className="border border-gray-300 px-4 py-2"></td>
                 </tr>
                 </tbody>
             </table>

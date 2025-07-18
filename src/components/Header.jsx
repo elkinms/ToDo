@@ -17,7 +17,7 @@ const Header = ({ title = "List it. Do it.", options = [], onOptionClick = () =>
     }, []);
 
     return (
-        <header className="bg-gray-100 shadow mb-6">
+        <header className="bg-gray-100 shadow mb-6 rounded-bl-md">
             <div className="relative max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
                 <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold text-center">
                     {title}

@@ -8,6 +8,8 @@ const Task = ({
                   update,
                   selected,
                   onSelect,
+                  isFirst = false,
+                  isLast = false,
               }) => {
     const [isEdit, setIsEdit] = useState(false);
     const [newContent, setNewContent] = useState(content);
@@ -23,10 +25,20 @@ const Task = ({
         setIsEdit(false);
     };
 
+    const trClass = [
+        isFirst ? "rounded-tl-md" : "",
+        isLast ? "rounded-bl-md" : "",
+        "overflow-hidden"
+    ].join(" ");
+
     return (
-        <tr>
+        <tr className={trClass}>
             <td className="border border-gray-300 px-4 py-2">
-                <input type="checkbox" checked={selected} onChange={() => onSelect(id)}/>
+                <input
+                    type="checkbox"
+                    checked={selected}
+                    onChange={() => onSelect(id)}
+                />
             </td>
             <td className="border border-gray-300 px-4 py-2" onClick={() => setIsEdit(true)}>
                 {isEdit ? (
@@ -47,7 +59,11 @@ const Task = ({
                     onChange={(e) => {
                         const value = e.target.value;
                         setNewStatus(value);
-                        update(id, {title: newContent, status: value, priority: newPriority});
+                        update(id, {
+                            title: newContent,
+                            status: value,
+                            priority: newPriority,
+                        });
                     }}
                 >
                     <option>Not started</option>
@@ -61,7 +77,11 @@ const Task = ({
                     onChange={(e) => {
                         const value = e.target.value;
                         setNewPriority(value);
-                        update(id, {title: newContent, status: newStatus, priority: value});
+                        update(id, {
+                            title: newContent,
+                            status: newStatus,
+                            priority: value,
+                        });
                     }}
                 >
                     <option>Low</option>
@@ -70,7 +90,6 @@ const Task = ({
                 </select>
             </td>
         </tr>
-
     );
 };
 

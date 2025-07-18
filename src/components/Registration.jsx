@@ -53,9 +53,8 @@ function Registration({ onAuthSuccess }) {
     };
 
     return (
-        <div className="px-2 w-full ">
+        <div className="pl-2 w-full ">
             <Header
-                title="List it. Do it."
                 options={[
                     { label: "Sign in", value: "Sign in" },
                     { label: "Sign up", value: "Sign up" }
