@@ -39,7 +39,7 @@ function Registration({ onAuthSuccess }) {
 
     return (
         <div className="auth-container">
-            <h2>{mode === 'login' ? 'Enter' : 'Registration'}</h2>
+            <h2>{'List it. Do it'}</h2>
 
             <div>
                 <button onClick={() => setMode('login')} disabled={mode === 'login'}>
