@@ -119,7 +119,7 @@ const TaskList = ({ onLogout }) => {
     return (
         <div className="pl-2 w-full">
             <Header
-                options={[{ label: "Log out", value: "logout" }]}
+                options={[{ label: "Sign out", value: "logout" }]}
                 onOptionClick={(value) => {
                     if (value === "logout") {
                         localStorage.removeItem("token");

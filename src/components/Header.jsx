@@ -18,14 +18,18 @@ const Header = ({ title = "List it. Do it.", options = [], onOptionClick = () =>
 
     return (
         <header className="bg-gray-100 shadow mb-6 rounded-bl-md">
-            <div className="relative max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-                <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold text-center">
+            <div className="relative max-w-8xl mx-auto flex justify-between items-center px-4 py-4">
+                <h1 className="absolute left-1/2 transform -translate-x-1/2 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 tracking-wider drop-shadow-md select-none">
                     {title}
                 </h1>
 
+                {/*<h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl font-semibold text-center">*/}
+                {/*    {title}*/}
+                {/*</h1>*/}
+
                 <div className="relative ml-auto" ref={dropdownRef}>
                     <FaUserCircle
-                        className="text-3xl cursor-pointer text-gray-600"
+                        className="text-4xl cursor-pointer text-gray-600"
                         onClick={() => setDropdownOpen((prev) => !prev)}
                     />
                     {dropdownOpen && (

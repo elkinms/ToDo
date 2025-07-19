@@ -5,10 +5,6 @@ class TodoService {
         return await todoRepository.createTask(taskData);
     }
 
-    async getAllTasks() {
-        return await todoRepository.findAllTasks();
-    }
-
     async getAllTasksByUser(userId) {
         return await todoRepository.findAllTasksUser(userId);
     }

@@ -5,15 +5,23 @@ import User from '../models/User.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret'; // Лучше вынести в .env
 
 export const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
     try {
+
         const existingUser = await User.findOne({ email });
         if (existingUser) return res.status(400).json({ error: 'User already exists' });
 
         const passwordHash = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ email, passwordHash });
+        const newUser = await User.create({ firstName, lastName, email, passwordHash });
 
-        res.status(201).json({ message: 'User created', userId: newUser._id });
+        const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '7d' });
+
+        res.status(201).json({
+            message: 'User created',
+            token,
+            userId: newUser.id,
+        });
+
     } catch (err) {
         res.status(500).json({ error: 'Registration failed', details: err.message });
     }
