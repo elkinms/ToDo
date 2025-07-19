@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Header from "./Header.jsx";
 
+const uri = import.meta.env.VITE_API_URL;
+
 function Registration({ onAuthSuccess }) {
     const [mode, setMode] = useState('Sign in');
     const [firstName, setFirstName] = useState('');
@@ -28,7 +30,7 @@ function Registration({ onAuthSuccess }) {
                 : { email, password, firstName, lastName };
 
         try {
-            const res = await fetch(`http://localhost:8080${endpoint}`, {
+            const res = await fetch(`${uri}${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
