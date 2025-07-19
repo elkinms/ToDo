@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Task from "./Task.jsx";
 import Header from "./Header.jsx";
 
+const uri = import.meta.env.VITE_API_URL;
+
 const TaskList = ({ onLogout }) => {
     const [tasks, setTasks] = useState([]);
     const [selectedIds, setSelectedIds] = useState([]);
@@ -14,7 +16,7 @@ const TaskList = ({ onLogout }) => {
 
     const loadTasks = async () => {
         try {
-            const response = await fetch("http://localhost:8080/todo", {
+            const response = await fetch(`${uri}/todo`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -34,7 +36,7 @@ const TaskList = ({ onLogout }) => {
         if (!newTaskTitle.trim()) return;
 
         try {
-            const res = await fetch("http://localhost:8080/todo", {
+            const res = await fetch(`${uri}/todo`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -62,7 +64,7 @@ const TaskList = ({ onLogout }) => {
     const deleteSelectedTasks = async () => {
         for (const id of selectedIds) {
             try {
-                const res = await fetch(`http://localhost:8080/todo/${id}`, {
+                const res = await fetch(`${uri}/todo/${id}`, {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -82,7 +84,7 @@ const TaskList = ({ onLogout }) => {
 
     const updateTask = async (id, updatedData) => {
         try {
-            const res = await fetch(`http://localhost:8080/todo/${id}`, {
+            const res = await fetch(`${uri}/todo/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
